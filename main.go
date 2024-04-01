@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Anishgupta26/user-app/health"
+	"github.com/Anishgupta26/user-app/users"
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/sirupsen/logrus"
@@ -20,12 +21,22 @@ func main() {
 	app := fiber.New()
 	app.Get("/", root)
 	app.Get("/health", health.Check)
+	app.Get("/userinfo", users.User_func)
+	app.Post("/post", func(c *fiber.Ctx) error {
+		body := c.Body()
+		res := string(body)
+		fmt.Println(res)
+		return c.SendString(res)
+	})
+	//Assignment-
+	app.Post("/user", users.Add_user)
+
 	err := app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {
 		logrus.Fatalln(err)
 		return
 	}
-
+	fmt.Print(err)
 	// POST /user  CREATE
 	/*
 		Body
