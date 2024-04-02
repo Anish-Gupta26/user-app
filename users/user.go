@@ -13,27 +13,44 @@ type User struct {
 	LastName  string `json:"lastname"`
 	Age       int    `json:"age"`
 }
+var user_database []User
 
-func User_func(c *fiber.Ctx) error {
-
-	data := map[string]string{
-		"first_name": "ANish",
-		"last_name":  "Gupta",
+func GetUser(c *fiber.Ctx) error{
+	name := c.Query("name")
+	if(name!=""){
+		for _,data := range user_database{
+			if(data.FirstName == name){
+				return c.JSON(data)
+			}
+		}
+		return c.SendString("Error: Name not found!")
 	}
-	fmt.Print(c.Query("name"))
-	return c.JSON(data)
-}
-
-func Add_user(c *fiber.Ctx) error {
+	return c.JSON(user_database)
+} 
+func AddUser(c *fiber.Ctx) error {
 	var user User
 	err := c.BodyParser(&user)
-	fmt.Println(user)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
+	fmt.Println(user)
+	user_database = append(user_database, user)
+	for idx, data:= range user_database{
+		fmt.Println(idx,data.FirstName)
+	}
 	fmt.Println(err)
-	return c.JSON(user)
+	return c.JSON(user_database)
 }
+
+// func User_func(c *fiber.Ctx) error {
+
+// 	data := map[string]string{
+// 		"first_name": "ANish",
+// 		"last_name":  "Gupta",
+// 	}
+// 	fmt.Print(c.Query("name"))
+// 	return c.JSON(data)
+// }
 
 // func Add_user(c *fiber.Ctx) error {
 // 	payload := string(c.Body())

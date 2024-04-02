@@ -21,15 +21,8 @@ func main() {
 	app := fiber.New()
 	app.Get("/", root)
 	app.Get("/health", health.Check)
-	app.Get("/userinfo", users.User_func)
-	app.Post("/post", func(c *fiber.Ctx) error {
-		body := c.Body()
-		res := string(body)
-		fmt.Println(res)
-		return c.SendString(res)
-	})
-	//Assignment-
-	app.Post("/user", users.Add_user)
+	app.Get("/user", users.GetUser)
+	app.Post("/user", users.AddUser)
 
 	err := app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))
 	if err != nil {
